@@ -37,6 +37,7 @@ vim.keymap.set(
 )
 
 vim.keymap.set({ "v", "n" }, "gm", "<cmd>Telescope marks<CR>", {})
+vim.keymap.set("n", "<leader>fg", ":lua require('telescope').extensions.live_grep_args.live_grep_args()<CR>")
 
 -- jump while keeping cursor in middle of screen
 vim.keymap.set("n", "<C-u>", "<C-u>zz")
