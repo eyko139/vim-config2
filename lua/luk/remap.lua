@@ -1,5 +1,5 @@
 vim.g.mapleader = " "
-vim.keymap.set("n", "<leader>pv", vim.cmd.Ex)
+-- vim.keymap.set("n", "<leader>pv", vim.cmd.Ex)
 vim.keymap.set("n", "<leader>u", vim.cmd.UndotreeToggle)
 vim.keymap.set("i", "jk", "<Esc>", options)
 
@@ -30,6 +30,13 @@ vim.opt.updatetime = 50
 -- move multiple lines at once
 vim.keymap.set("v", "J", ":m '>+1<CR>gv=gv")
 vim.keymap.set("v", "K", ":m '<-2<CR>gv=gv")
+vim.keymap.set(
+	"n",
+	"gd",
+	"<cmd>lua require('telescope.builtin').lsp_definitions({ exclude = '/react/index.d.ts' })<CR>"
+)
+
+vim.keymap.set({ "v", "n" }, "gm", "<cmd>Telescope marks<CR>", {})
 
 -- jump while keeping cursor in middle of screen
 vim.keymap.set("n", "<C-u>", "<C-u>zz")
