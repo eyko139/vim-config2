@@ -19,3 +19,12 @@ require("nvim-treesitter.configs").setup({
 		enabled = true,
 	},
 })
+
+require("telescope").setup({
+	defaults = {
+		cache_picker = {
+			num_pickers = 100,
+			limit_entries = 1000,
+		},
+	},
+})

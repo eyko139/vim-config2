@@ -44,4 +44,4 @@ vim.keymap.set("n", "<C-u>", "<C-u>zz")
 vim.keymap.set("n", "<C-d>", "<C-d>zz")
 
 -- paste without filling buffer
-vim.keymap.set("x", "<leader>p", '"_dP')
+vim.keymap.set("x", "<S-p>", '"_dP')

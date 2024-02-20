@@ -12,7 +12,7 @@ return {
 		local telescope = require("telescope")
 		local lga_actions = require("telescope-live-grep-args.actions")
 		local live_grep_args_shortcuts = require("telescope-live-grep-args.shortcuts")
-		vim.keymap.set("n", "fs", live_grep_args_shortcuts.grep_word_under_cursor)
+		vim.keymap.set("n", "<leader>fs", live_grep_args_shortcuts.grep_word_under_cursor)
 
 		telescope.setup({
 			extensions = {
