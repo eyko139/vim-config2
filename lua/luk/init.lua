@@ -23,18 +23,16 @@ require("nvim-treesitter.configs").setup({
 require("telescope").setup({
 	defaults = {
 		cache_picker = {
-			num_pickers = 100,
+			num_pickers = 1000,
 			limit_entries = 1000,
 		},
 	},
 })
-
-print("chngd my mind")
+require("telescope").load_extension("dap")
 
 require("gitsigns").setup({
 	on_attach = function(bufnr)
 		local gs = package.loaded.gitsigns
-
 		local function map(mode, l, r, opts)
 			opts = opts or {}
 			opts.buffer = bufnr
@@ -89,3 +87,86 @@ require("gitsigns").setup({
 		map({ "o", "x" }, "ih", ":<C-U>Gitsigns select_hunk<CR>")
 	end,
 })
+
+-- local dap = require("dap")
+-- dap.adapters["local-lua"] = {
+-- 	type = "executable",
+-- 	command = "node",
+-- 	args = {
+-- 		"/home/luk/projects/priv/local-lua-debugger-vscode/extension/debugAdapter.js",
+-- 	},
+-- 	enrich_config = function(config, on_config)
+-- 		if not config["extensionPath"] then
+-- 			local c = vim.deepcopy(config)
+-- 			-- 💀 If this is missing or wrong you'll see
+-- 			-- "module 'lldebugger' not found" errors in the dap-repl when trying to launch a debug session
+-- 			c.extensionPath = "/home/luk/projects/priv/local-lua-debugger-vscode"
+-- 			on_config(c)
+-- 		else
+-- 			on_config(config)
+-- 		end
+-- 	end,
+-- }
+local dap = require("dap")
+dap.configurations.lua = {
+	{
+		type = "nlua",
+		request = "attach",
+		name = "Attach to running Neovim instance",
+	},
+}
+
+dap.adapters.nlua = function(callback, config)
+	callback({ type = "server", host = config.host or "127.0.0.1", port = config.port or 8086 })
+end
+
+dap.adapters.delve = {
+	type = "server",
+	port = "${port}",
+	executable = {
+		command = "dlv",
+		args = { "dap", "-l", "127.0.0.1:${port}" },
+	},
+}
+
+dap.configurations.go = {
+	{
+		type = "go",
+		name = "Debug ENV",
+		request = "launch",
+		program = "${env:DEBUG_GO_PACKAGE}",
+	},
+	{
+		type = "go",
+		name = "Debug",
+		request = "launch",
+		program = "${file}",
+	},
+	{
+		type = "delve",
+		name = "Debug test", -- configuration for debugging test files
+		request = "launch",
+		mode = "test",
+		program = "${file}",
+	},
+	-- works with go.mod packages and sub packages
+	{
+		type = "delve",
+		name = "Debug test (go.mod)",
+		request = "launch",
+		mode = "test",
+		program = "./${relativeFileDirname}",
+	},
+}
+local args = { "dap", "-l", "127.0.0.1:" .. "33078" }
+dap.adapters.go = {
+	type = "server",
+	port = "33078",
+	executable = {
+		command = "dlv",
+		args = args,
+	},
+}
+
+-- require("dap-go").setup()
+require("dapui").setup()
