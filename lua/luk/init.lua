@@ -145,3 +145,5 @@ end
 vim.keymap.set("n", "<M-e>", function()
 	toggle_telescope(harpoon:list())
 end, { desc = "Open harpoon window" })
+
+require("dapui").setup()
