@@ -88,85 +88,60 @@ require("gitsigns").setup({
 	end,
 })
 
--- local dap = require("dap")
--- dap.adapters["local-lua"] = {
--- 	type = "executable",
--- 	command = "node",
--- 	args = {
--- 		"/home/luk/projects/priv/local-lua-debugger-vscode/extension/debugAdapter.js",
--- 	},
--- 	enrich_config = function(config, on_config)
--- 		if not config["extensionPath"] then
--- 			local c = vim.deepcopy(config)
--- 			-- 💀 If this is missing or wrong you'll see
--- 			-- "module 'lldebugger' not found" errors in the dap-repl when trying to launch a debug session
--- 			c.extensionPath = "/home/luk/projects/priv/local-lua-debugger-vscode"
--- 			on_config(c)
--- 		else
--- 			on_config(config)
--- 		end
--- 	end,
--- }
-local dap = require("dap")
-dap.configurations.lua = {
-	{
-		type = "nlua",
-		request = "attach",
-		name = "Attach to running Neovim instance",
-	},
-}
+local harpoon = require("harpoon")
 
-dap.adapters.nlua = function(callback, config)
-	callback({ type = "server", host = config.host or "127.0.0.1", port = config.port or 8086 })
+-- REQUIRED
+harpoon:setup()
+-- REQUIRED
+
+vim.keymap.set("n", "<leader>a", function()
+	harpoon:list():append()
+end)
+vim.keymap.set("n", "<M-e>", function()
+	harpoon.ui:toggle_quick_menu(harpoon:list())
+end)
+
+vim.keymap.set("n", "<C-h>", function()
+	harpoon:list():select(1)
+end)
+vim.keymap.set("n", "<C-t>", function()
+	harpoon:list():select(2)
+end)
+vim.keymap.set("n", "<C-c>", function()
+	harpoon:list():select(3)
+end)
+vim.keymap.set("n", "<C-s>", function()
+	harpoon:list():select(4)
+end)
+
+-- Toggle previous & next buffers stored within Harpoon list
+vim.keymap.set("n", "<C-S-P>", function()
+	harpoon:list():prev()
+end)
+vim.keymap.set("n", "<C-S-N>", function()
+	harpoon:list():next()
+end)
+
+-- basic telescope configuration
+local conf = require("telescope.config").values
+local function toggle_telescope(harpoon_files)
+	local file_paths = {}
+	for _, item in ipairs(harpoon_files.items) do
+		table.insert(file_paths, item.value)
+	end
+
+	require("telescope.pickers")
+		.new({}, {
+			prompt_title = "Harpoon",
+			finder = require("telescope.finders").new_table({
+				results = file_paths,
+			}),
+			previewer = conf.file_previewer({}),
+			sorter = conf.generic_sorter({}),
+		})
+		:find()
 end
 
-dap.adapters.delve = {
-	type = "server",
-	port = "${port}",
-	executable = {
-		command = "dlv",
-		args = { "dap", "-l", "127.0.0.1:${port}" },
-	},
-}
-
-dap.configurations.go = {
-	{
-		type = "go",
-		name = "Debug ENV",
-		request = "launch",
-		program = "${env:DEBUG_GO_PACKAGE}",
-	},
-	{
-		type = "go",
-		name = "Debug",
-		request = "launch",
-		program = "${file}",
-	},
-	{
-		type = "delve",
-		name = "Debug test", -- configuration for debugging test files
-		request = "launch",
-		mode = "test",
-		program = "${file}",
-	},
-	-- works with go.mod packages and sub packages
-	{
-		type = "delve",
-		name = "Debug test (go.mod)",
-		request = "launch",
-		mode = "test",
-		program = "./${relativeFileDirname}",
-	},
-}
-local args = { "dap", "-l", "127.0.0.1:" .. "33078" }
-dap.adapters.go = {
-	type = "server",
-	port = "33078",
-	executable = {
-		command = "dlv",
-		args = args,
-	},
-}
-
--- require("dap-go").setup()
-require("dapui").setup()
+vim.keymap.set("n", "<M-e>", function()
+	toggle_telescope(harpoon:list())
+end, { desc = "Open harpoon window" })
