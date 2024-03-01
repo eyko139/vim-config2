@@ -103,3 +103,11 @@ vim.api.nvim_set_keymap("n", "<F5>", [[:lua require"osv".launch({port = 8086})<C
 -- dap ui
 -- vim.keymap.set("v", "<M-k>", "<Cmd>lua require('dapui').eval(call :lua get_visual_selection())<CR>")
 vim.keymap.set("v", "<M-k>", "<Cmd>lua require('dapui').eval('call' get_visual_selection())<CR>")
+
+-- copilot
+vim.keymap.set("i", "<C-y>", 'copilot#Accept("\\<CR>")', {
+	expr = true,
+	replace_keycodes = false,
+})
+vim.g.copilot_no_tab_map = true
+
