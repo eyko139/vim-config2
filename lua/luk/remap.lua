@@ -98,7 +98,7 @@ vim.api.nvim_set_keymap("n", "<F9>", [[:lua require"dap".continue()<CR>]], { nor
 vim.api.nvim_set_keymap("n", "<F10>", [[:lua require"dap".step_over()<CR>]], { noremap = true })
 vim.api.nvim_set_keymap("n", "<S-F10>", [[:lua require"dap".step_into()<CR>]], { noremap = true })
 vim.api.nvim_set_keymap("n", "<F12>", [[:lua require"dap.ui.widgets".hover()<CR>]], { noremap = true })
-vim.api.nvim_set_keymap("n", "<F5>", [[:lua require"osv".launch({port = 8086})<CR>]], { noremap = true })
+vim.api.nvim_set_keymap("n", "<F5>", [[:lua require"dap".continue()<CR>]], { noremap = true })
 
 -- dap ui
 -- vim.keymap.set("v", "<M-k>", "<Cmd>lua require('dapui').eval(call :lua get_visual_selection())<CR>")
@@ -110,4 +110,12 @@ vim.keymap.set("i", "<C-y>", 'copilot#Accept("\\<CR>")', {
 	replace_keycodes = false,
 })
 vim.g.copilot_no_tab_map = true
+
+vim.keymap.set("n", "]t", function()
+  require("todo-comments").jump_next()
+end, { desc = "Next todo comment" })
+
+vim.keymap.set("n", "[t", function()
+  require("todo-comments").jump_prev()
+end, { desc = "Previous todo comment" })
 
