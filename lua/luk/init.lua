@@ -12,6 +12,7 @@ if not vim.loop.fs_stat(lazypath) then
 	})
 end
 vim.opt.rtp:prepend(lazypath)
+vim.opt.conceallevel = 1
 
 require("lazy").setup({ { import = "luk.plugins" }, { import = "luk.plugins.lsp" } }, {})
 require("nvim-treesitter.configs").setup({
