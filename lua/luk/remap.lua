@@ -75,6 +75,9 @@ vim.opt.updatetime = 50
 -- format
 vim.keymap.set("n", "<leader>f", "<cmd>Format<CR>")
 
+-- obsidian
+vim.keymap.set("n", "<leader>fo", "<cmd>ObsidianSearch<CR>")
+
 -- move multiple lines at once
 vim.keymap.set("v", "J", ":m '>+1<CR>gv=gv")
 vim.keymap.set("v", "K", ":m '<-2<CR>gv=gv")
@@ -103,6 +106,8 @@ vim.api.nvim_set_keymap("n", "<F5>", [[:lua require"dap".continue()<CR>]], { nor
 -- dap ui
 -- vim.keymap.set("v", "<M-k>", "<Cmd>lua require('dapui').eval(call :lua get_visual_selection())<CR>")
 vim.keymap.set("v", "<M-k>", "<Cmd>lua require('dapui').eval('call' get_visual_selection())<CR>")
+
+vim.keymap.set({"v", "n", "i"}, "<F12>", "<Cmd>SayHello<CR>")
 
 -- copilot
 vim.keymap.set("i", "<C-y>", 'copilot#Accept("\\<CR>")', {
