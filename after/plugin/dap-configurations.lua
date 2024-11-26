@@ -1,5 +1,4 @@
 local dap = require("dap")
-local dapui = require("dapui")
 dap.configurations.lua = {
 	{
 		type = "nlua",
@@ -41,6 +40,13 @@ dap.configurations.go = {
 		mode = "test",
 		program = "${file}",
 	},
+	{
+		type = "delve",
+		name = "Debug test ENV", -- configuration for debugging test files
+		request = "launch",
+		mode = "test",
+		program = "${env:DEBUG_GO_PACKAGE}",
+	},
 	-- works with go.mod packages and sub packages
 	{
 		type = "delve",
@@ -59,16 +65,3 @@ dap.adapters.go = {
 		args = args,
 	},
 }
-
-dap.listeners.before.attach.dapui_config = function()
-	dapui.open()
-end
-dap.listeners.before.launch.dapui_config = function()
-	dapui.open()
-end
-dap.listeners.before.event_terminated.dapui_config = function()
-	dapui.close()
-end
-dap.listeners.before.event_exited.dapui_config = function()
-	dapui.close()
-end

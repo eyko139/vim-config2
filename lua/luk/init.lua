@@ -14,6 +14,7 @@ end
 vim.opt.rtp:prepend(lazypath)
 vim.opt.conceallevel = 1
 
+
 require("lazy").setup({ { import = "luk.plugins" }, { import = "luk.plugins.lsp" } }, {})
 require("nvim-treesitter.configs").setup({
 	highlight = {
@@ -141,4 +142,5 @@ vim.keymap.set("n", "<M-e>", function()
 	toggle_telescope(harpoon:list())
 end, { desc = "Open harpoon window" })
 
+--TODO check whats up with dapui
 require("dapui").setup()

@@ -59,6 +59,10 @@ return {
 		-- used to enable autocompletion (assign to every lsp server config)
 		local capabilities = cmp_nvim_lsp.default_capabilities()
 
+		local mason_registry = require("mason-registry")
+		local vue_language_server_path = mason_registry.get_package("vue-language-server"):get_install_path()
+			.. "/node_modules/@vue/language-server"
+
 		-- Change the Diagnostic symbols in the sign column (gutter)
 		-- (not in youtube nvim video)
 		local signs = { Error = " ", Warn = " ", Hint = "󰠠 ", Info = " " }
@@ -68,17 +72,30 @@ return {
 		end
 
 		-- configure typescript server with plugin
-		lspconfig["tsserver"].setup({
+		lspconfig["ts_ls"].setup({
 			capabilities = capabilities,
 			on_attach = on_attach,
-			cmd = { "typescript-language-server", "--stdio", "--log-level", "4" },
+			cmd = {
+				"/home/luk/.config/nvim/lua/luk/plugins/scripts/tsserver_wrapper.sh",
+				"--stdio",
+				"--log-level",
+				"4",
+			},
 			init_options = {
 				hostInfo = "neovim",
 				tsserver = {
 					logVerbosity = "verbose",
 					trace = "verbose",
 				},
+				plugins = {
+					{
+						name = "@vue/typescript-plugin",
+						location = vue_language_server_path,
+						languages = { "vue" },
+					},
+				},
 			},
+			filetypes = { "typescript", "javascript", "javascriptreact", "typescriptreact", "vue" },
 		})
 
 		-- configure css server
@@ -93,16 +110,36 @@ return {
 			on_attach = on_attach,
 		})
 
+		lspconfig["clangd"].setup({
+			capabilities = capabilities,
+			on_attach = on_attach,
+		})
+
+		lspconfig["volar"].setup({
+			capabilities = capabilities,
+			on_attach = on_attach,
+			init_options = {
+				plugins = {
+					{
+						name = "@vue/typescript-plugin",
+						location = vue_language_server_path,
+						languages = { "vue" },
+					},
+				},
+			},
+			filetypes = { "typescript", "javascript", "javascriptreact", "typescriptreact", "vue" },
+		})
+
 		lspconfig["gopls"].setup({
 			capabilities = capabilities,
 			on_attach = on_attach,
-            settings= {
-                gopls = {
-                    analyses = {
-                        fillstruct = true
-                    }
-                }
-            }
+			settings = {
+				gopls = {
+					analyses = {
+						fillstruct = true,
+					},
+				},
+			},
 		})
 
 		lspconfig.htmx.setup({})
