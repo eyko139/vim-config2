@@ -109,12 +109,6 @@ vim.keymap.set("v", "<M-k>", "<Cmd>lua require('dapui').eval('call' get_visual_s
 
 vim.keymap.set({"v", "n", "i"}, "<F12>", "<Cmd>SayHello<CR>")
 
--- copilot
-vim.keymap.set("i", "<C-y>", 'copilot#Accept("\\<CR>")', {
-	expr = true,
-	replace_keycodes = false,
-})
-vim.g.copilot_no_tab_map = true
 
 vim.keymap.set("n", "]t", function()
   require("todo-comments").jump_next()
@@ -124,3 +118,14 @@ vim.keymap.set("n", "[t", function()
   require("todo-comments").jump_prev()
 end, { desc = "Previous todo comment" })
 
+-- remove the tilde at the end of the file
+vim.opt.fillchars = {eob = " "}
+vim.g.maplocalleader = ' '
+
+
+-- copilot
+-- vim.keymap.set('i', '<C-t>', 'copilot#Accept("\\<CR>")', {
+--   expr = true,
+--   replace_keycodes = true
+-- })
+-- vim.g.copilot_no_tab_map = true

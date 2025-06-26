@@ -3,6 +3,7 @@ return {
 	event = { "BufReadPre", "BufNewFile" },
 	dependencies = {
 		"hrsh7th/cmp-nvim-lsp",
+        "saghen/blink.cmp",
 		{ "antosha417/nvim-lsp-file-operations", config = true },
 	},
 	config = function()
@@ -10,7 +11,7 @@ return {
 		local lspconfig = require("lspconfig")
 
 		-- import cmp-nvim-lsp plugin
-		local cmp_nvim_lsp = require("cmp_nvim_lsp")
+		-- local cmp_nvim_lsp = require("cmp_nvim_lsp")
 
 		local keymap = vim.keymap -- for conciseness
 
@@ -57,7 +58,8 @@ return {
 		end
 
 		-- used to enable autocompletion (assign to every lsp server config)
-		local capabilities = cmp_nvim_lsp.default_capabilities()
+		-- local capabilities = cmp_nvim_lsp.default_capabilities()
+        local capabilities = require('blink.cmp').get_lsp_capabilities()
 
 		local mason_registry = require("mason-registry")
 		local vue_language_server_path = mason_registry.get_package("vue-language-server"):get_install_path()
@@ -111,6 +113,11 @@ return {
 		})
 
 		lspconfig["clangd"].setup({
+			capabilities = capabilities,
+			on_attach = on_attach,
+		})
+
+		lspconfig["pyright"].setup({
 			capabilities = capabilities,
 			on_attach = on_attach,
 		})
